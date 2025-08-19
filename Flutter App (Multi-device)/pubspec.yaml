@@ -1,0 +1,15 @@
+name: lamp_multi_controller
+description: Control multiple lamps via Firebase RTDB
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^2.30.0
+  firebase_database: ^10.4.0
+
+flutter:
+  uses-material-design: true
