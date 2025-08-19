@@ -1,7 +1,6 @@
 ## Purpose: This is a mobile application for turning on and off your house lights. When you're away, you sometimes forget to turn on some of the lights, especially if you're alone or there's no one else around. The other occupants might be away, so you can't ask someone to turn on the lights. Don't worry, this mobile application is the solution. With this application, you can turn on and off the lights at any time. 
 
-## We'll create two parts: 
-'''bash
+## We'll create two parts:
 • IoT Device Code (ESP8266/ESP32) → which controls the lights. 
 • Mobile App (e.g., Flutter) → which sends commands to the device over the internet (via HTTP or MQTT).
 
