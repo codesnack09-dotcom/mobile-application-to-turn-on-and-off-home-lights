@@ -1,0 +1,2 @@
+each ESP board listens to
+/devices/<DEVICE_ID>/STATE
