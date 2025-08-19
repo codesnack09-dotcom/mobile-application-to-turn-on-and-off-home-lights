@@ -1,4 +1,5 @@
-## Purpose: This is a mobile application for turning on and off your house lights. When you're away, you sometimes forget to turn on some of the lights, especially if you're alone or there's no one else around. The other occupants might be away, so you can't ask someone to turn on the lights. Don't worry, this mobile application is the solution. With this application, you can turn on and off the lights at any time. 
+## Purpose:
+This is a mobile application for turning on and off your house lights. When you're away, you sometimes forget to turn on some of the lights, especially if you're alone or there's no one else around. The other occupants might be away, so you can't ask someone to turn on the lights. Don't worry, this mobile application is the solution. With this application, you can turn on and off the lights at any time. 
 
 ## We'll create two parts:
 • IoT Device Code (ESP8266/ESP32) → which controls the lights. 
@@ -115,3 +116,5 @@ lib/main.dart
 • Schedule: the schedules/ node that the ESP monitors for ON/OFF timers.
 • MQTT: Replace Firebase with an MQTT broker for lower latency.
 • Over-the-air (OTA): Add OTA updates for ESPs. 
+## Support Me
+If you find this project useful, you can support me on [ko-fi.com](https://www.ko-fi.com/codesnack).
