@@ -1,0 +1,18 @@
+{
+  "rules": {
+    "devices": {
+      "$deviceId": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        "state": {
+          ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'"
+        },
+        "status": {
+          // status hanya di-update oleh device? Bisa dibatasi via custom claims / path terpisah
+          ".write": "auth != null",
+          ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'"
+        }
+      }
+    }
+  }
+      }
