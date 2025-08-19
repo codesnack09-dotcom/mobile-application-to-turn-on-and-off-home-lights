@@ -1,0 +1,3 @@
+/devices/
+  lamp01: { name: "Living Room", state: "OFF", status: "OFF" }
+  lamp02: { name: "Bedroom",     state: "ON",  status: "ON"  }
