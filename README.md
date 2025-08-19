@@ -2,22 +2,22 @@
 This is a mobile application for turning on and off your house lights. When you're away, you sometimes forget to turn on some of the lights, especially if you're alone or there's no one else around. The other occupants might be away, so you can't ask someone to turn on the lights. Don't worry, this mobile application is the solution. With this application, you can turn on and off the lights at any time. 
 
 ## We'll create two parts:
-• IoT Device Code (ESP8266/ESP32) → which controls the lights. 
-• Mobile App (e.g., Flutter) → which sends commands to the device over the internet (via HTTP or MQTT).
+- IoT Device Code (ESP8266/ESP32) → which controls the lights. 
+- Mobile App (e.g., Flutter) → which sends commands to the device over the internet (via HTTP or MQTT).
 
 ## For this example, I'll create a simple version:
-• Flutter mobile app → with ON and OFF buttons.
-• ESP8266 → has a small web server to receive ON/OFF commands.
+- Flutter mobile app → with ON and OFF buttons.
+- ESP8266 → has a small web server to receive ON/OFF commands.
 
  1️⃣ ESP8266 Code (English) 📌 Result: The ESP8266 will have an IP address, for example, 192.168.1.100. If you open http://192.168.1.100/ON → the light turns on. If you open http://192.168.1.100/OFF → the light turns off. 
 2️⃣ Flutter Mobile App (English) pubspec.yaml → add the HTTP package:
 lib/main.dart
 
 ## How It Works
-• Upload the ESP8266 code → note the IP address from the Serial Monitor.
-• Replace deviceIP in the Flutter code with the ESP8266 IP address.
-• Run the Flutter app on your phone (make sure your phone and ESP8266 are on the same Wi-Fi network or use port forwarding for access from outside the home).
-• Press the ON/OFF button in the app → the lamp will respond. 
+- Upload the ESP8266 code → note the IP address from the Serial Monitor.
+- Replace deviceIP in the Flutter code with the ESP8266 IP address.
+- Run the Flutter app on your phone (make sure your phone and ESP8266 are on the same Wi-Fi network or use port forwarding for access from outside the home).
+- Press the ON/OFF button in the app → the lamp will respond. 
 
 ## The version that can be controlled from outside the home network (global internet) without the hassle of setting up a router uses the Firebase Realtime Database or MQTT broker.
 
@@ -66,9 +66,9 @@ lib/firebase_options.dart
 • Unplug/unplug the ESP: the app will automatically sync with the latest status in the DB. 
 
 ## Security & Production (important!) 
-• DO NOT use public rules for production. Use Authentication (Anonymous/Email/Google Sign-In) and restrict the path: { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null" } } } } 
-• Hide credentials (keep the API key public in the app, but set strict rules). 
-• Use watchdog/retry on the ESP for auto-reconnect. 
+- DO NOT use public rules for production. Use Authentication (Anonymous/Email/Google Sign-In) and restrict the path: { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null" } } } } 
+- Hide credentials (keep the API key public in the app, but set strict rules). 
+- Use watchdog/retry on the ESP for auto-reconnect. 
 
 ## Alternative: MQTT (HiveMQ/Cloud MQTT) If you want very low latency and minimal traffic, you can use MQTT (public or self-hosted broker). The Flutter app publishes to the home/lamp01/cmd topic, the ESP subscribes, and drives the relay. (I can also create an MQTT version if you want.
 
@@ -81,14 +81,14 @@ a) Summary Schematic (ASCII) [ESP8266 / ESP32] [Relay Module] [AC Lamp] 3V3 ----
 b) Pin Table (two variants) Components ESP8266 (NodeMCU) ESP32 (DevKit) Relay Module VCC3 V3 V3 VCC GND GND GND Control D1 GPIO23 IN AC Load —— COM & NO For testing without AC, replace the AC lamp with an LED + resistor on the breadboard (driven from 5V) via transistor/relay).
 
 2) ESP32 Code (Firebase RTDB, Multi-device-ready) Use libraries: 
-• ESP32 core (Arduino) 
-• Firebase ESP Client (by Mobizt)
+- ESP32 core (Arduino) 
+- Firebase ESP Client (by Mobizt)
 Data structure in Firebase:
 
 3) Flutter App (Multi-device) This app: 
-• Reads a list of devices from /devices.
-• Displays a list with names and an ON/OFF switch.
-• Tapping the switch → writes the state: "ON"/"OFF"; the ESP updates the state. 
+- Reads a list of devices from /devices.
+- Displays a list with names and an ON/OFF switch.
+- Tapping the switch → writes the state: "ON"/"OFF"; the ESP updates the state. 
 
 pubspec.yaml
 
@@ -97,24 +97,24 @@ lib/main.dart
 4) Firebase Realtime Database Rules Testing (easy, not secure) — while in development: { "rules": { ".read": true, ".write": true } } Production (more secure, with Auth): Enable Anonymous or Email/Google Sign-In. { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null", "state": { ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" }, "status": { // status only updated by the device? Can be restricted via custom claims / separate path ".write": "auth != null", ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" } } } } }
 
 5) How to Run (Short)
-• Firebase
-• Create a project + Realtime Database.
-• Add an app (Android/iOS), download the config file (google-services.json / plist).
-• (Optional) Enable Anonymous Auth.
-• Create a node /devices/lamp01/{name:"Living Room", state:"OFF", status:"OFF"}.
-• ESP32
-• Install the Firebase ESP Client library.
-• Fill in the API_KEY, DATABASE_URL, DEVICE_ID, SSID/Password.
-• Upload → view the Serial Monitor (IP, connected...).
-• Flutter App
-• flutterfire configure → generate firebase_options.dart.
-• Run flutter run.
-• View the device list, toggle the ON/OFF switch.
+- Firebase
+- Create a project + Realtime Database.
+- Add an app (Android/iOS), download the config file (google-services.json / plist).
+- (Optional) Enable Anonymous Auth.
+- Create a node /devices/lamp01/{name:"Living Room", state:"OFF", status:"OFF"}.
+- ESP32
+- Install the Firebase ESP Client library.
+- Fill in the API_KEY, DATABASE_URL, DEVICE_ID, SSID/Password.
+- Upload → view the Serial Monitor (IP, connected...).
+- Flutter App
+- flutterfire configure → generate firebase_options.dart.
+- Run flutter run.
+- View the device list, toggle the ON/OFF switch.
 
 6) Optional Extensions
-• Group/Room: the rooms/{roomId}/devices/{deviceId} structure for grouping.
-• Schedule: the schedules/ node that the ESP monitors for ON/OFF timers.
-• MQTT: Replace Firebase with an MQTT broker for lower latency.
-• Over-the-air (OTA): Add OTA updates for ESPs. 
+- Group/Room: the rooms/{roomId}/devices/{deviceId} structure for grouping.
+- Schedule: the schedules/ node that the ESP monitors for ON/OFF timers.
+- MQTT: Replace Firebase with an MQTT broker for lower latency.
+- Over-the-air (OTA): Add OTA updates for ESPs. 
 ## Support Me
 If you find this project useful, you can support me on [ko-fi.com](https://www.ko-fi.com/codesnack).
