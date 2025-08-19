@@ -1,33 +1,35 @@
 ## Purpose: This is a mobile application for turning on and off your house lights. When you're away, you sometimes forget to turn on some of the lights, especially if you're alone or there's no one else around. The other occupants might be away, so you can't ask someone to turn on the lights. Don't worry, this mobile application is the solution. With this application, you can turn on and off the lights at any time. 
 
-We'll create two parts: 
+## We'll create two parts: 
 • IoT Device Code (ESP8266/ESP32) → which controls the lights. 
 • Mobile App (e.g., Flutter) → which sends commands to the device over the internet (via HTTP or MQTT).
 
-For this example, I'll create a simple version:
-• Flutter mobile app → with ON and OFF buttons. • ESP8266 → has a small web server to receive ON/OFF commands.
+## For this example, I'll create a simple version:
+• Flutter mobile app → with ON and OFF buttons.
+• ESP8266 → has a small web server to receive ON/OFF commands.
 
  1️⃣ ESP8266 Code (English) 📌 Result: The ESP8266 will have an IP address, for example, 192.168.1.100. If you open http://192.168.1.100/ON → the light turns on. If you open http://192.168.1.100/OFF → the light turns off. 
 2️⃣ Flutter Mobile App (English) pubspec.yaml → add the HTTP package:
 lib/main.dart
 
-How It Works
+## How It Works
 • Upload the ESP8266 code → note the IP address from the Serial Monitor.
 • Replace deviceIP in the Flutter code with the ESP8266 IP address.
 • Run the Flutter app on your phone (make sure your phone and ESP8266 are on the same Wi-Fi network or use port forwarding for access from outside the home).
 • Press the ON/OFF button in the app → the lamp will respond. 
 
-The version that can be controlled from outside the home network (global internet) without the hassle of setting up a router uses the Firebase Realtime Database or MQTT broker.
+## The version that can be controlled from outside the home network (global internet) without the hassle of setting up a router uses the Firebase Realtime Database or MQTT broker.
 
-We'll create the global internet version without fiddling with the router, using the Firebase Realtime Database as an "intermediary" (cloud). 
+## We'll create the global internet version without fiddling with the router, using the Firebase Realtime Database as an "intermediary" (cloud). 
 
-The architecture is as follows: Flutter app (mobile) ⟷ Firebase (cloud) ⟷ ESP8266 (home) → Relay → Lamp
+## The architecture is as follows: Flutter app (mobile) ⟷ Firebase (cloud) ⟷ ESP8266 (home) → Relay → Lamp
 
-Below are the complete setup steps, ESP8266 code, and Flutter code.
+## Below are the complete setup steps, ESP8266 code, and Flutter code.
 
 1) Set up Firebase (just once)
 • Open the Firebase Console and create a project (e.g., lamp-controller).
-• Add a Realtime Database → select a location → Start in locked mode (we'll set the rules later). • Add a Web App (for Flutter) → copy the config (apiKey, projectId, etc.).
+• Add a Realtime Database → select a location → Start in locked mode (we'll set the rules later).
+• Add a Web App (for Flutter) → copy the config (apiKey, projectId, etc.).
 • In the Realtime Database, create a starting node: /devices/<YOUR_DEVICE_ID>/state = "OFF" (replace <YOUR_DEVICE_ID>, e.g., lamp01) 
 
 Minimum rules for testing (public—for testing only, not for production): 
@@ -56,26 +58,22 @@ android/app/google-services.json & ios/Runner/GoogleService-Info.plist
 lib/firebase_options.dart
 • Auto-generate with: flutter pub add firebase_core firebase_database dart pub global activate flutterfire_cli flutterfire configure This generates a firebase_options.dart containing the app configuration. lib/main.dart 
 
-Quick Testing 
+## Quick Testing 
 • Upload the ESP8266 code (check the Serial Monitor to ensure Wi-Fi and Firebase are connected). 
 • Run the Flutter app on your phone. 
 • Try switching ON/OFF → the value in the DB changes → the ESP receives the stream and turns the relay on/off → the light turns on/off. 
 • Unplug/unplug the ESP: the app will automatically sync with the latest status in the DB. 
 
-Security & Production (important!) 
+## Security & Production (important!) 
 • DO NOT use public rules for production. Use Authentication (Anonymous/Email/Google Sign-In) and restrict the path: { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null" } } } } 
 • Hide credentials (keep the API key public in the app, but set strict rules). 
 • Use watchdog/retry on the ESP for auto-reconnect. 
 
-Alternative: MQTT (HiveMQ/Cloud MQTT) If you want very low latency and minimal traffic, you can use MQTT (public or self-hosted broker). The Flutter app publishes to the home/lamp01/cmd topic, the ESP subscribes, and drives the relay. (I can also create an MQTT version if you want.
+## Alternative: MQTT (HiveMQ/Cloud MQTT) If you want very low latency and minimal traffic, you can use MQTT (public or self-hosted broker). The Flutter app publishes to the home/lamp01/cmd topic, the ESP subscribes, and drives the relay. (I can also create an MQTT version if you want.
 
-Here, I've provided everything: a clear diagram/wiring, an ESP32 version, and a Flutter mobile app that supports multi-device (multiple lamps) with the Firebase Realtime Database.
+## Here, I've provided everything: a clear diagram/wiring, an ESP32 version, and a Flutter mobile app that supports multi-device (multiple lamps) with the Firebase Realtime Database.
 
-1) Wiring (Diagram & Table) Purpose: The ESP (ESP8266/ESP32) controls the Relay → The Relay disconnects/connects the AC Lamp. ⚠️ Electrical safety 
-Indonesia
-Inggris
-2.794 / 5.000
-k: When controlling AC Mains (220V/110V), ensure safe cable routing, use appropriately rated relays, keep the casing closed, and do not touch the AC circuit while it is on.
+1) Wiring (Diagram & Table) Purpose: The ESP (ESP8266/ESP32) controls the Relay → The Relay disconnects/connects the AC Lamp. ⚠️ Electrical safety: When controlling AC Mains (220V/110V), ensure safe cable routing, use appropriately rated relays, keep the casing closed, and do not touch the AC circuit while it is on.
 
 a) Summary Schematic (ASCII) [ESP8266 / ESP32] [Relay Module] [AC Lamp] 3V3 ---------------------------> VCC GND ---------------------------> GND AC LIVE -----[COM] Relay [NO]----- Lamp ----- AC NEUTRAL D1 (ESP8266) / GPIO23 (ESP32) --> IN • Typical relay modes: Active LOW LOW → ON (NO contact closed) HIGH → OFF (NO contact open)
 
