@@ -28,42 +28,42 @@ lib/main.dart
 ## Below are the complete setup steps, ESP8266 code, and Flutter code.
 
 1) Set up Firebase (just once)
-• Open the Firebase Console and create a project (e.g., lamp-controller).
-• Add a Realtime Database → select a location → Start in locked mode (we'll set the rules later).
-• Add a Web App (for Flutter) → copy the config (apiKey, projectId, etc.).
-• In the Realtime Database, create a starting node: /devices/<YOUR_DEVICE_ID>/state = "OFF" (replace <YOUR_DEVICE_ID>, e.g., lamp01) 
+- Open the Firebase Console and create a project (e.g., lamp-controller).
+- Add a Realtime Database → select a location → Start in locked mode (we'll set the rules later).
+- Add a Web App (for Flutter) → copy the config (apiKey, projectId, etc.).
+- In the Realtime Database, create a starting node: /devices/<YOUR_DEVICE_ID>/state = "OFF" (replace <YOUR_DEVICE_ID>, e.g., lamp01) 
 
 Minimum rules for testing (public—for testing only, not for production): 
 { "rules": { ".read": true, ".write": true } }
 For production, enable Auth and restrict write/read permissions to logged-in users.
 
 2) ESP8266 Code (C++ / Arduino) Required libraries (Library Manager):
-• Firebase ESP Client (by Mobizt)
-• ESP8266WiFi
+- Firebase ESP Client (by Mobizt)
+- ESP8266WiFi
 
 Pin connections:
-• Relay IN → D1
-• Relay VCC → 3V3, GND → GND
+- Relay IN → D1
+- Relay VCC → 3V3, GND → GND
 
 Note:
-• Enable Anonymous Authentication in Firebase > Authentication > Sign-in method.
-• Change API_KEY and DATABASE_URL according to your project.
-• For production security, use Auth (Email/Password, Custom Token, etc.) and tighten the rules.
+- Enable Anonymous Authentication in Firebase > Authentication > Sign-in method.
+- Change API_KEY and DATABASE_URL according to your project.
+- For production security, use Auth (Email/Password, Custom Token, etc.) and tighten the rules.
 
 3) Flutter Mobile App (ON/OFF control) pubspec.yaml 
 
 android/app/google-services.json & ios/Runner/GoogleService-Info.plist
-• Download from the Firebase Console (Project Settings > Your apps > Flutter iOS/Android).
-• Also add the Firebase Gradle plugin according to the Firebase (FlutterFire) guidelines.
+- Download from the Firebase Console (Project Settings > Your apps > Flutter iOS/Android).
+- Also add the Firebase Gradle plugin according to the Firebase (FlutterFire) guidelines.
 
 lib/firebase_options.dart
-• Auto-generate with: flutter pub add firebase_core firebase_database dart pub global activate flutterfire_cli flutterfire configure This generates a firebase_options.dart containing the app configuration. lib/main.dart 
+- Auto-generate with: flutter pub add firebase_core firebase_database dart pub global activate flutterfire_cli flutterfire configure This generates a firebase_options.dart containing the app configuration. lib/main.dart 
 
 ## Quick Testing 
-• Upload the ESP8266 code (check the Serial Monitor to ensure Wi-Fi and Firebase are connected). 
-• Run the Flutter app on your phone. 
-• Try switching ON/OFF → the value in the DB changes → the ESP receives the stream and turns the relay on/off → the light turns on/off. 
-• Unplug/unplug the ESP: the app will automatically sync with the latest status in the DB. 
+- Upload the ESP8266 code (check the Serial Monitor to ensure Wi-Fi and Firebase are connected). 
+- Run the Flutter app on your phone. 
+- Try switching ON/OFF → the value in the DB changes → the ESP receives the stream and turns the relay on/off → the light turns on/off. 
+- Unplug/unplug the ESP: the app will automatically sync with the latest status in the DB. 
 
 ## Security & Production (important!) 
 - DO NOT use public rules for production. Use Authentication (Anonymous/Email/Google Sign-In) and restrict the path: { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null" } } } } 
