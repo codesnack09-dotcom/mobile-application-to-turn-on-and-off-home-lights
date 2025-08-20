@@ -94,7 +94,7 @@ pubspec.yaml
 
 lib/main.dart
 
-4) Firebase Realtime Database Rules Testing (easy, not secure) — while in development:{ "rules": { ".read": true, ".write": true } } Production (more secure, with Auth): Enable Anonymous or Email/Google Sign-In. { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null", "state": { ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" }, "status": { // status only updated by the device? Can be restricted via custom claims / separate path ".write": "auth != null", ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" } } } } }
+4) Firebase Realtime Database Rules Testing (easy, not secure) — while in development: { "rules": { ".read": true, ".write": true } } Production (more secure, with Auth): Enable Anonymous or Email/Google Sign-In. { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null", "state": { ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" }, "status": { // status only updated by the device? Can be restricted via custom claims / separate path ".write": "auth != null", ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" } } } } }
 
 6) How to Run (Short)
 - Firebase
