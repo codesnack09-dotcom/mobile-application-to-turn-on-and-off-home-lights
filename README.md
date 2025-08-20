@@ -94,9 +94,11 @@ pubspec.yaml
 
 lib/main.dart
 
-4) Firebase Realtime Database Rules Testing (easy, not secure) — while in development: { "rules": { ".read": true, ".write": true } } Production (more secure, with Auth): Enable Anonymous or Email/Google Sign-In. { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null", "state": { ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" }, "status": { // status only updated by the device? Can be restricted via custom claims / separate path ".write": "auth != null", ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" } } } } }
+4) Firebase Realtime Database Rules Testing (easy, not secure) — while in development:
+```bash { "rules": { ".read": true, ".write": true } } Production (more secure, with Auth): Enable Anonymous or Email/Google Sign-In. { "rules": { "devices": { "$deviceId": { ".read": "auth != null", ".write": "auth != null", "state": { ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" }, "status": { // status only updated by the device? Can be restricted via custom claims / separate path ".write": "auth != null", ".validate": "newData.val() == 'ON' || newData.val() == 'OFF'" } } } } }
+```
 
-5) How to Run (Short)
+6) How to Run (Short)
 - Firebase
 - Create a project + Realtime Database.
 - Add an app (Android/iOS), download the config file (google-services.json / plist).
